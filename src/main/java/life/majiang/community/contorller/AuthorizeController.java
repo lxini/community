@@ -45,10 +45,8 @@ public class AuthorizeController {
         accessTokenDTO.setClient_secret(clientSecret);
         // 调用github API获取accessToken
         String accessToken = githubProvider.getAccessToken(accessTokenDTO);
-        System.out.println(accessToken);
         // 调用github API获取用户信息
         GithubUserDTO githubUserDTO = githubProvider.getUser(accessToken);
-
 
         if (githubUserDTO != null) {
             // 登录成功，写cookie和session
@@ -67,6 +65,7 @@ public class AuthorizeController {
             return "redirect:/";
         } else {
             // 登录失败，重新登录
+            System.out.println("登录失败");
             return "redirect:/";
         }
     }
