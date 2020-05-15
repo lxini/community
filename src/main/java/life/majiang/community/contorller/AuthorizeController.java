@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -49,7 +48,7 @@ public class AuthorizeController {
         System.out.println(accessToken);
         // 调用github API获取用户信息
         GithubUserDTO githubUserDTO = githubProvider.getUser(accessToken);
-        System.out.println(githubUserDTO.getName() + "是" + githubUserDTO.getBio());
+
 
         if (githubUserDTO != null) {
             // 登录成功，写cookie和session
@@ -58,8 +57,11 @@ public class AuthorizeController {
             user.setToken(token);
             user.setName(githubUserDTO.getName());
             user.setAccountId(String.valueOf(githubUserDTO.getId()));
+            user.setAvatarUrl(githubUserDTO.getAvatar_url());
+            user.setBio(githubUserDTO.getBio());
             user.setGmtCreate(System.currentTimeMillis());
             user.setGmtModified(user.getGmtCreate());
+
             userMapper.insert(user);
             response.addCookie(new Cookie("token",token));
             return "redirect:/";
