@@ -5,6 +5,7 @@ import life.majiang.community.dto.GithubUserDTO;
 import life.majiang.community.mapper.UserMapper;
 import life.majiang.community.model.User;
 import life.majiang.community.provider.GithubProvider;
+import life.majiang.community.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
@@ -20,6 +22,9 @@ public class AuthorizeController {
 
     @Resource
     private GithubProvider githubProvider;
+
+    @Resource
+    private UserService userService;
 
     @Value("${github.client.id}")
     private String clientId;
@@ -30,8 +35,6 @@ public class AuthorizeController {
     @Value("${github.client.redirect.url}")
     private String redirectUrl;
 
-    @Resource
-    private UserMapper userMapper;
 
     @GetMapping("/callback")
     public String callback(@RequestParam(name = "code") String code,
@@ -48,7 +51,7 @@ public class AuthorizeController {
         // 调用github API获取用户信息
         GithubUserDTO githubUserDTO = githubProvider.getUser(accessToken);
 
-        if (githubUserDTO != null) {
+        if (githubUserDTO != null && githubUserDTO.getId() != null) {
             // 登录成功，写cookie和session
             User user = new User();
             String token = UUID.randomUUID().toString();
@@ -57,10 +60,7 @@ public class AuthorizeController {
             user.setAccountId(String.valueOf(githubUserDTO.getId()));
             user.setAvatarUrl(githubUserDTO.getAvatar_url());
             user.setBio(githubUserDTO.getBio());
-            user.setGmtCreate(System.currentTimeMillis());
-            user.setGmtModified(user.getGmtCreate());
-
-            userMapper.insert(user);
+            userService.createOrUpdate(user);
             response.addCookie(new Cookie("token",token));
             return "redirect:/";
         } else {
@@ -68,5 +68,15 @@ public class AuthorizeController {
             System.out.println("登录失败");
             return "redirect:/";
         }
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpServletRequest request,HttpServletResponse response){
+        request.getSession().removeAttribute("user");
+        Cookie cookie = new Cookie("token",null);
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
+        response.addCookie(cookie);
+        return "redirect:/";
     }
 }

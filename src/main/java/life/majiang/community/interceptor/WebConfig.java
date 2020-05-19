@@ -1,12 +1,12 @@
 package life.majiang.community.interceptor;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 
 @Configuration
-@EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
     @Resource
@@ -14,14 +14,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration addInterceptor = registry.addInterceptor(sessionInterceptor);
-
-        addInterceptor.excludePathPatterns("/static/**");
-        addInterceptor.addPathPatterns("/**");
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addInterceptor(sessionInterceptor).addPathPatterns("/**");
     }
 }
