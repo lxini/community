@@ -20,7 +20,7 @@ public class QuestionController {
 
     @GetMapping("/question/{id}")
     @ApiOperation(value = "累加阅读数",notes = "访问一次问题阅读数加一",httpMethod = "GET")
-    public String question(@PathVariable(name = "id")Integer id, Model model){
+    public String question(@PathVariable(name = "id")Long id, Model model){
         QuestionDTO questionDTO = questionService.getById(id);
         // 累加阅读数
         questionService.incView(id);

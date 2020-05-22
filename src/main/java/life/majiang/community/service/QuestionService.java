@@ -13,6 +13,7 @@ import life.majiang.community.model.User;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -65,7 +66,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public PaginationDTO list(Integer userId, Integer page, Integer size) {
+    public PaginationDTO list(Long userId, Integer page, Integer size) {
         PaginationDTO paginationDTO = new PaginationDTO();
         QuestionExample example = new QuestionExample();
         example.createCriteria().andCreatorEqualTo(userId);
@@ -105,7 +106,7 @@ public class QuestionService {
         return paginationDTO;
     }
 
-    public QuestionDTO getById(Integer id) {
+    public QuestionDTO getById(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         if(question == null){
             throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
@@ -117,6 +118,7 @@ public class QuestionService {
         return questionDTO;
     }
 
+    @Transactional
     public void createOrUpdate(Question question) {
         if(question.getId() == null){
             // 创建
@@ -143,7 +145,8 @@ public class QuestionService {
         }
     }
 
-    public void incView(Integer id) {
+    @Transactional
+    public void incView(Long id) {
         Question question = questionMapper.selectByPrimaryKey(id);
         question.setId(id);
         question.setViewCount(1);
