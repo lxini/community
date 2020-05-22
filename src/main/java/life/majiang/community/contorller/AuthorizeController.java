@@ -1,5 +1,7 @@
 package life.majiang.community.contorller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import life.majiang.community.dto.AccessTokenDTO;
 import life.majiang.community.dto.GithubUserDTO;
 import life.majiang.community.mapper.UserMapper;
@@ -18,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Api(value = "github授权接口",tags = "github授权接口",description = "github授权相关接口")
 public class AuthorizeController {
 
     @Resource
@@ -37,6 +40,7 @@ public class AuthorizeController {
 
 
     @GetMapping("/callback")
+    @ApiOperation(value = "回调接口",notes = "获取github用户信息",httpMethod = "GET")
     public String callback(@RequestParam(name = "code") String code,
                            @RequestParam(name = "state") String state,
                            HttpServletResponse response) {
@@ -71,6 +75,7 @@ public class AuthorizeController {
     }
 
     @GetMapping("/logout")
+    @ApiOperation(value = "退出登录",notes = "退出登录",httpMethod = "GET")
     public String logout(HttpServletRequest request,HttpServletResponse response){
         request.getSession().removeAttribute("user");
         Cookie cookie = new Cookie("token",null);

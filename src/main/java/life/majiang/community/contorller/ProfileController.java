@@ -1,5 +1,7 @@
 package life.majiang.community.contorller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import life.majiang.community.dto.PaginationDTO;
 import life.majiang.community.model.User;
 import life.majiang.community.service.QuestionService;
@@ -13,14 +15,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@Api(value = "小标签相关接口",tags = "小标签接口")
 public class ProfileController {
-
-
 
     @Resource
     private QuestionService questionService;
 
     @GetMapping("/profile/{action}")
+    @ApiOperation(value = "切换小标签接口",notes = "根据不同的标签切换页面",httpMethod = "POST")
     public String profile(@PathVariable(name = "action")String action,
                           Model model,
                           HttpServletRequest request,

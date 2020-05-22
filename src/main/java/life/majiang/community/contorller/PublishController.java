@@ -1,7 +1,8 @@
 package life.majiang.community.contorller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import life.majiang.community.dto.QuestionDTO;
-import life.majiang.community.mapper.QuestionMapper;
 import life.majiang.community.model.Question;
 import life.majiang.community.model.User;
 import life.majiang.community.service.QuestionService;
@@ -16,12 +17,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
+@Api(value = "提交问题相关接口",tags = "提交问题接口")
 public class PublishController {
 
     @Resource
     private QuestionService questionService;
 
     @GetMapping("/publish/{id}")
+    @ApiOperation(value = "编辑问题",notes = "保存编辑修改后的问题",httpMethod = "GET")
     public String edit(@PathVariable(name = "id")Integer id,Model model){
         QuestionDTO question = questionService.getById(id);
         model.addAttribute("title",question.getTitle());
@@ -32,11 +35,13 @@ public class PublishController {
     }
 
     @GetMapping("/publish")
+    @ApiOperation(value = "返回提问页面",notes = "返回提问页面",httpMethod = "GET")
     public String publish() {
         return "publish";
     }
 
     @PostMapping("/publish")
+    @ApiOperation(value = "提交问题接口",notes = "提交并保存问题接口",httpMethod = "POST")
     public String doPublish(
             @RequestParam(value = "title",required = false) String title,
             @RequestParam(value = "description",required = false) String description,

@@ -8,3 +8,4 @@
 7. thymeleaf
 8. bootstrap
 9. MyBatis Generator
+10. Swagger2
