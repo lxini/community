@@ -52,7 +52,7 @@ public class GithubProvider {
             GithubUserDTO githubUserDTO = JSON.parseObject(string, GithubUserDTO.class);
             return githubUserDTO;
         } catch (IOException e) {
-
+            e.printStackTrace();
         }
         return null;
     }
