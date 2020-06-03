@@ -3,6 +3,7 @@ package life.majiang.community.contorller;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import life.majiang.community.dto.QuestionDTO;
+import life.majiang.community.service.CommentService;
 import life.majiang.community.service.QuestionService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ public class QuestionController {
 
     @Resource
     private QuestionService questionService;
+
+    @Resource
+    private CommentService commentService;
 
     @GetMapping("/question/{id}")
     @ApiOperation(value = "累加阅读数",notes = "访问一次问题阅读数加一",httpMethod = "GET")
